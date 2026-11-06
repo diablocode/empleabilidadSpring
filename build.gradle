@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.apache.jena:jena-arq:5.5.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-rest-test'

@@ -1,0 +1,460 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:emp="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <owl:Ontology rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad">
+    <owl:versionInfo>1.1.0</owl:versionInfo>
+    <owl:versionIRI rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad/1.1.0"/>
+    <owl:priorVersion rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad/1.0.0"/>
+    <rdfs:comment xml:lang="es">Vocabulario para representar perfiles profesionales, ofertas laborales y recomendaciones de empleabilidad.</rdfs:comment>
+    <rdfs:label xml:lang="es">Ontología de empleabilidad</rdfs:label>
+  </owl:Ontology>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Lenguaje">
+    <rdfs:comment xml:lang="es">Idioma que domina o requiere un nivel explícito.</rdfs:comment>
+    <rdfs:label xml:lang="es">Lenguaje</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#TrayectoriaLaboral">
+    <rdfs:comment xml:lang="es">Secuencia o agrupación de etapas profesionales de un candidato.</rdfs:comment>
+    <rdfs:label xml:lang="es">Trayectoria laboral</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato">
+    <rdfs:comment xml:lang="es">Persona cuyo perfil profesional se representa.</rdfs:comment>
+    <rdfs:label xml:lang="es">Candidato</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Habilidad">
+    <rdfs:comment xml:lang="es">Capacidad práctica o técnica que puede relacionarse con una competencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">Habilidad</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Explicacion">
+    <rdfs:comment xml:lang="es">Justificación trazable de una recomendación, con evidencia y método cuando estén disponibles.</rdfs:comment>
+    <rdfs:label xml:lang="es">Explicación</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#EtapaEnTrayectoriaLaboral">
+    <rdfs:comment xml:lang="es">Etapa que ordena y contextualiza un periodo de la trayectoria.</rdfs:comment>
+    <rdfs:label xml:lang="es">Etapa en trayectoria laboral</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#PerfilSocioemocional">
+    <rdfs:comment xml:lang="es">Conjunto opcional y contextualizado de evaluaciones socioemocionales; no representa atributos protegidos.</rdfs:comment>
+    <rdfs:label xml:lang="es">Perfil socioemocional</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Empleador">
+    <rdfs:comment xml:lang="es">Organización o entidad que publica o gestiona una oferta laboral.</rdfs:comment>
+    <rdfs:label xml:lang="es">Empleador</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Educacion">
+    <rdfs:comment xml:lang="es">Formación académica o profesional de un candidato.</rdfs:comment>
+    <rdfs:label xml:lang="es">Educación</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RankingDeCompetencia">
+    <rdfs:comment xml:lang="es">Evaluación ordinal o puntuación de una competencia, con escala y procedencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">Ranking de competencia</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RequerimientoDeCompetencia">
+    <rdfs:comment xml:lang="es">Requisito de competencia asociado a una oferta laboral.</rdfs:comment>
+    <rdfs:label xml:lang="es">Requerimiento de competencia</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral">
+    <rdfs:comment xml:lang="es">Vacante publicada con ubicación, fechas, modalidad y condiciones disponibles.</rdfs:comment>
+    <rdfs:label xml:lang="es">Oferta laboral</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#FactorSocioemocional">
+    <rdfs:comment xml:lang="es">Factor evaluado dentro de un perfil socioemocional.</rdfs:comment>
+    <rdfs:label xml:lang="es">Factor socioemocional</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#HabilidadSuave">
+    <rdfs:comment xml:lang="es">Capacidad no técnica relevante para el desempeño profesional.</rdfs:comment>
+    <rdfs:label xml:lang="es">Habilidad suave</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RedSocial">
+    <rdfs:comment xml:lang="es">Persona o grupo de contacto profesional conocido por el candidato, no una plataforma electrónica.</rdfs:comment>
+    <rdfs:label xml:lang="es">Red social profesional</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion">
+    <rdfs:comment xml:lang="es">Resultado que sugiere una oferta, candidato, acción u oportunidad.</rdfs:comment>
+    <rdfs:label xml:lang="es">Recomendación</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#ExperienciaLaboral">
+    <rdfs:comment xml:lang="es">Relación o periodo de trabajo con funciones y fechas asociadas.</rdfs:comment>
+    <rdfs:label xml:lang="es">Experiencia laboral</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Competencia">
+    <rdfs:comment xml:lang="es">Capacidad o dominio requerido o atribuido a un candidato.</rdfs:comment>
+    <rdfs:label xml:lang="es">Competencia</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RecursoSocial">
+    <rdfs:comment xml:lang="es">Recurso de empleabilidad o habilidad suave accesible mediante una conexión profesional.</rdfs:comment>
+    <rdfs:label xml:lang="es">Recurso social</rdfs:label>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#especificaCompetencia">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Competencia"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RequerimientoDeCompetencia"/>
+    <rdfs:comment xml:lang="es">Indica la competencia descrita por un requerimiento.</rdfs:comment>
+    <rdfs:label xml:lang="es">especifica competencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#conoceA">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RedSocial"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una persona o grupo de contacto profesional.</rdfs:comment>
+    <rdfs:label xml:lang="es">conoce a</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#dominaLenguaje">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Lenguaje"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con un idioma que domina en el nivel indicado.</rdfs:comment>
+    <rdfs:label xml:lang="es">domina lenguaje</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneFactorSocioemocional">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#FactorSocioemocional"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#PerfilSocioemocional"/>
+    <rdfs:comment xml:lang="es">Relaciona un perfil socioemocional con un factor evaluado.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene factor socioemocional</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#poseeCompetencia">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Competencia"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una competencia declarada o evaluada.</rdfs:comment>
+    <rdfs:label xml:lang="es">posee competencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#contieneEtapa">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#EtapaEnTrayectoriaLaboral"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#TrayectoriaLaboral"/>
+    <rdfs:comment xml:lang="es">Relaciona una trayectoria laboral con una de sus etapas.</rdfs:comment>
+    <rdfs:label xml:lang="es">contiene etapa</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#facilitaRecursoSocial">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RecursoSocial"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RedSocial"/>
+    <rdfs:comment xml:lang="es">Relaciona un contacto profesional con un recurso de empleabilidad accesible mediante esa conexión.</rdfs:comment>
+    <rdfs:label xml:lang="es">facilita recurso social</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#requiereCompetencia">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RequerimientoDeCompetencia"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:comment xml:lang="es">Vincula una oferta laboral con uno de sus requerimientos de competencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">requiere competencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#recomiendaOferta">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Indica la oferta laboral sugerida por una recomendación.</rdfs:comment>
+    <rdfs:label xml:lang="es">recomienda oferta</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneExperienciaLaboral">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#ExperienciaLaboral"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una experiencia laboral registrada.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene experiencia laboral</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneHabilidadSuave">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#HabilidadSuave"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una habilidad no técnica.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene habilidad suave</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#publicadoPor">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Empleador"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:comment xml:lang="es">Indica la organización o entidad que publica o gestiona una oferta.</rdfs:comment>
+    <rdfs:label xml:lang="es">publicado por</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#evaluaCompetencia">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Competencia"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RankingDeCompetencia"/>
+    <rdfs:comment xml:lang="es">Indica qué competencia se evalúa en un ranking.</rdfs:comment>
+    <rdfs:label xml:lang="es">evalúa competencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tipoRecomendacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Asigna a una recomendación un tipo controlado del catálogo SKOS de recomendaciones.</rdfs:comment>
+    <rdfs:label xml:lang="es">tipo de recomendación</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelMCER">
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Lenguaje"/>
+    <rdfs:comment xml:lang="es">Asigna a un idioma un nivel controlado del Marco Común Europeo de Referencia para las Lenguas.</rdfs:comment>
+    <rdfs:label xml:lang="es">nivel MCER</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneExplicacion">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Explicacion"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Vincula una recomendación con su explicación.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene explicación</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tienePerfilSocioemocional">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#PerfilSocioemocional"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Vincula opcionalmente un candidato con su perfil socioemocional contextualizado.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene perfil socioemocional</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#recomiendaCandidato">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Indica el candidato asociado al sujeto de una recomendación.</rdfs:comment>
+    <rdfs:label xml:lang="es">recomienda candidato</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneEducacion">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Educacion"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con su formación académica o profesional.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene educación</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneHabilidad">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Habilidad"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una habilidad práctica o técnica.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene habilidad</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneRanking">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RankingDeCompetencia"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con una evaluación de competencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene ranking</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#utilizaEvidencia">
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Explicacion"/>
+    <rdfs:comment xml:lang="es">Vincula una explicación con un recurso RDF que la respalda.</rdfs:comment>
+    <rdfs:label xml:lang="es">utiliza evidencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#etapaDeExperiencia">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#ExperienciaLaboral"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#EtapaEnTrayectoriaLaboral"/>
+    <rdfs:comment xml:lang="es">Vincula una etapa de trayectoria con la experiencia laboral que contextualiza.</rdfs:comment>
+    <rdfs:label xml:lang="es">etapa de experiencia</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tieneTrayectoria">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#TrayectoriaLaboral"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Relaciona un candidato con su trayectoria laboral.</rdfs:comment>
+    <rdfs:label xml:lang="es">tiene trayectoria</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#etapaDeEducacion">
+    <rdfs:range rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Educacion"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#EtapaEnTrayectoriaLaboral"/>
+    <rdfs:comment xml:lang="es">Vincula una etapa de trayectoria con la educación que contextualiza.</rdfs:comment>
+    <rdfs:label xml:lang="es">etapa de educación</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#modalidad">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:comment xml:lang="es">Modalidad de trabajo indicada en una oferta.</rdfs:comment>
+    <rdfs:label xml:lang="es">modalidad</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escala">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">IRI de la escala usada para interpretar una puntuación o nivel.</rdfs:comment>
+    <rdfs:label xml:lang="es">escala</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nombre">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Nombre legible de una entidad, si se conoce y su uso es apropiado.</rdfs:comment>
+    <rdfs:label xml:lang="es">nombre</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#correoContacto">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Correo electrónico de contacto de un candidato; debe protegerse como dato personal.</rdfs:comment>
+    <rdfs:label xml:lang="es">correo de contacto</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#telefonoContacto">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Candidato"/>
+    <rdfs:comment xml:lang="es">Número telefónico de contacto opcional de un candidato; debe protegerse como dato personal.</rdfs:comment>
+    <rdfs:label xml:lang="es">teléfono de contacto</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#ubicacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:comment xml:lang="es">Ubicación asociada a una oferta laboral.</rdfs:comment>
+    <rdfs:label xml:lang="es">ubicación</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#accionRecomendada">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Texto que describe una acción sugerida cuando la recomendación no apunta a una entidad RDF.</rdfs:comment>
+    <rdfs:label xml:lang="es">acción recomendada</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#fechaFin">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Fecha de fin de un periodo o vigencia, cuando se conoce.</rdfs:comment>
+    <rdfs:label xml:lang="es">fecha de fin</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#puntuacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Valor numérico de una evaluación; debe interpretarse junto con su escala.</rdfs:comment>
+    <rdfs:label xml:lang="es">puntuación</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#fechaEvaluacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RankingDeCompetencia"/>
+    <rdfs:comment xml:lang="es">Fecha en que se realizó la evaluación de competencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">fecha de evaluación</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#estadoOferta">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#OfertaLaboral"/>
+    <rdfs:comment xml:lang="es">Estado de publicación de una oferta laboral.</rdfs:comment>
+    <rdfs:label xml:lang="es">estado de oferta</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#vigenteHasta">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Fecha hasta la que se considera vigente una recomendación.</rdfs:comment>
+    <rdfs:label xml:lang="es">vigente hasta</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#versionModelo">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#Recomendacion"/>
+    <rdfs:comment xml:lang="es">Versión del método o modelo que generó una recomendación.</rdfs:comment>
+    <rdfs:label xml:lang="es">versión del modelo</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#esObligatorio">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RequerimientoDeCompetencia"/>
+    <rdfs:comment xml:lang="es">Indica si un requerimiento de competencia se declara obligatorio.</rdfs:comment>
+    <rdfs:label xml:lang="es">es obligatorio</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#fechaCreacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Fecha y hora de creación de un recurso.</rdfs:comment>
+    <rdfs:label xml:lang="es">fecha de creación</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#identificador">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Identificador opaco de un recurso; no debe contener datos personales.</rdfs:comment>
+    <rdfs:label xml:lang="es">identificador</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelEsperado">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:domain rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#RequerimientoDeCompetencia"/>
+    <rdfs:comment xml:lang="es">Nivel requerido para una competencia en una oferta.</rdfs:comment>
+    <rdfs:label xml:lang="es">nivel esperado</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#descripcion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Descripción textual de un recurso.</rdfs:comment>
+    <rdfs:label xml:lang="es">descripción</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#fechaInicio">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Fecha de inicio de un periodo o vigencia, cuando se conoce.</rdfs:comment>
+    <rdfs:label xml:lang="es">fecha de inicio</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#metodoEvaluacion">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">Método usado para obtener una evaluación.</rdfs:comment>
+    <rdfs:label xml:lang="es">método de evaluación</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#fuente">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:comment xml:lang="es">IRI de la fuente de información o evidencia.</rdfs:comment>
+    <rdfs:label xml:lang="es">fuente</rdfs:label>
+  </owl:DatatypeProperty>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelB2">
+    <skos:prefLabel xml:lang="es">B2 - Avanzado</skos:prefLabel>
+    <skos:notation>B2</skos:notation>
+    <skos:inScheme>
+      <skos:ConceptScheme rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER">
+        <rdfs:comment xml:lang="es">Catálogo de niveles de competencia lingüística A1 a C2.</rdfs:comment>
+        <rdfs:label xml:lang="es">Marco Común Europeo de Referencia para las Lenguas</rdfs:label>
+      </skos:ConceptScheme>
+    </skos:inScheme>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelB1">
+    <skos:prefLabel xml:lang="es">B1 - Umbral</skos:prefLabel>
+    <skos:notation>B1</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#ofertaCompatible">
+    <skos:prefLabel xml:lang="es">Oferta compatible</skos:prefLabel>
+    <skos:notation>oferta-compatible</skos:notation>
+    <skos:inScheme>
+      <skos:ConceptScheme rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tiposDeRecomendacion">
+        <rdfs:label xml:lang="es">Tipos de recomendación de empleabilidad</rdfs:label>
+      </skos:ConceptScheme>
+    </skos:inScheme>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaPorDesarrollar">
+    <skos:prefLabel xml:lang="es">Competencia por desarrollar</skos:prefLabel>
+    <skos:notation>competencia-por-desarrollar</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tiposDeRecomendacion"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelC2">
+    <skos:prefLabel xml:lang="es">C2 - Maestría</skos:prefLabel>
+    <skos:notation>C2</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelC1">
+    <skos:prefLabel xml:lang="es">C1 - Dominio operativo eficaz</skos:prefLabel>
+    <skos:notation>C1</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#recursoDeAprendizaje">
+    <skos:prefLabel xml:lang="es">Recurso de aprendizaje</skos:prefLabel>
+    <skos:notation>recurso-de-aprendizaje</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tiposDeRecomendacion"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#mejoraDePerfil">
+    <skos:prefLabel xml:lang="es">Mejora de perfil</skos:prefLabel>
+    <skos:notation>mejora-de-perfil</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tiposDeRecomendacion"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#siguienteAccionSugerida">
+    <skos:prefLabel xml:lang="es">Siguiente acción sugerida</skos:prefLabel>
+    <skos:notation>siguiente-accion-sugerida</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#tiposDeRecomendacion"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelA2">
+    <skos:prefLabel xml:lang="es">A2 - Plataforma</skos:prefLabel>
+    <skos:notation>A2</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#nivelA1">
+    <skos:prefLabel xml:lang="es">A1 - Acceso</skos:prefLabel>
+    <skos:notation>A1</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaMCER"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaNivel1">
+    <skos:prefLabel xml:lang="es">Muy poca habilidad</skos:prefLabel>
+    <skos:notation>1</skos:notation>
+    <skos:inScheme>
+      <skos:ConceptScheme rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaCompetencia1a5">
+        <rdfs:comment xml:lang="es">Escala ordinal propia para registrar competencia. Las puntuaciones solo se comparan dentro de esta escala.</rdfs:comment>
+        <rdfs:label xml:lang="es">Escala de competencia de 1 a 5</rdfs:label>
+      </skos:ConceptScheme>
+    </skos:inScheme>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaNivel3">
+    <skos:prefLabel xml:lang="es">Intermedio</skos:prefLabel>
+    <skos:notation>3</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaCompetencia1a5"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaNivel2">
+    <skos:prefLabel xml:lang="es">Básico</skos:prefLabel>
+    <skos:notation>2</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaCompetencia1a5"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaNivel5">
+    <skos:prefLabel xml:lang="es">Experto</skos:prefLabel>
+    <skos:notation>5</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaCompetencia1a5"/>
+  </skos:Concept>
+  <skos:Concept rdf:about="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#competenciaNivel4">
+    <skos:prefLabel xml:lang="es">Avanzado</skos:prefLabel>
+    <skos:notation>4</skos:notation>
+    <skos:inScheme rdf:resource="https://localhost:3030/diablocode/grafosEmpleabilidad/ontology/empleabilidad#escalaCompetencia1a5"/>
+  </skos:Concept>
+</rdf:RDF>
