@@ -125,6 +125,10 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 
 ### Layer 3 — Google authentication and authorization
 
+**Status:** Authentication and API access controls implemented; automated tests and the user's real-browser Google sign-in/sign-out confirmation passed. Profile/resource ownership tests are covered with profile operations in Layer 4.
+
+**Delivered:** Added official GIS button integration, server-side Google ID-token verification, verified-email requirement and stable `sub` session identity; HTTP-only SameSite session cookies with session-ID rotation; CSRF tokens for login/sign-out; restricted CORS; current-user/sign-out endpoints; and default authentication for all non-public `/api/**` endpoints.
+
 **Purpose:** Establish secure authenticated API access before personal data is exposed.
 
 **Work**
@@ -134,16 +138,16 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 - After successful validation, establish the application's own secure session and define cookie and CSRF behavior for the React-to-backend request pattern.
 - Add current-user and sign-out flows; do not build username/password, password-reset, or app-specific sign-up/login screens.
 - Associate application identity with Google's stable subject claim; use email only as profile/display data where appropriate.
-- Protect profile and recommendation APIs and enforce ownership at the backend.
+- **Completed for the auth foundation:** Require a session for all non-public `/api/**` routes. Profile-resource ownership is enforced when profile APIs are introduced in Layer 4; there are no profile/recommendation endpoints to own yet.
 - Return consistent unauthenticated/forbidden responses for API calls.
 
 **Verification**
 
-- Security tests cover unauthenticated access, successful authenticated access, sign-out, and ownership checks.
-- Manual local test confirms the Google-provided sign-in button, credential validation, and application session flow.
+- **Passed:** Security tests cover unauthenticated/forbidden access, CSRF, successful mocked authentication, session fixation protection, current-user, sign-out, invalid credentials, CORS, and missing configuration.
+- **Passed:** Live local smoke test verified session-cookie flags, CSRF-protected malformed-credential rejection, and the React API proxy. The user confirmed the real Google sign-in and sign-out flow works in the browser.
 - No Google password, raw ID token, or backend secret is persisted or logged. The GIS client ID may be exposed as public frontend configuration.
 
-**Dependency:** Layer 1 configuration of the confirmed GIS client ID and authorized React origin; backend credential validation remains to be implemented.
+**Dependency:** Met. Layer 1's confirmed GIS client ID and authorized React origin are configured for local development.
 
 ### Layer 4 — User profile storage and API
 

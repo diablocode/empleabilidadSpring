@@ -53,6 +53,80 @@ h1 {
   line-height: 1.65;
 }
 
+.auth-panel {
+  min-height: 92px;
+  margin-top: 24px;
+}
+
+.google-button {
+  width: 100%;
+  min-height: 44px;
+}
+
+.auth-message,
+.configuration-message {
+  color: #59677e;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.configuration-message {
+  padding: 14px;
+  border-radius: 10px;
+  background: #fff8e6;
+  color: #75530a;
+}
+
+.configuration-message code {
+  font-size: 0.85em;
+}
+
+.auth-error {
+  color: #a52b24;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.signed-in {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.user-details {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+
+.user-details span {
+  color: #59677e;
+  font-size: 0.9rem;
+}
+
+.sign-out {
+  padding: 9px 13px;
+  border: 1px solid #d6deea;
+  border-radius: 8px;
+  background: #fff;
+  color: #273853;
+  cursor: pointer;
+  font: inherit;
+}
+
+.sign-out:hover {
+  background: #f5f7fb;
+}
+
 .status {
   display: flex;
   min-height: 48px;

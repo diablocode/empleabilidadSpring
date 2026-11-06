@@ -13,7 +13,26 @@ Empleabilidad is being built as a React client and a Spring Boot API. The API is
 
 The local defaults are non-secret and allow the backend to start without Google credentials or a running Fuseki service. Copy `client/.env.example` to `client/.env.local` to configure the frontend proxy. The root `.env.example` documents backend environment variables; Spring reads these from the process environment, not from a `.env` file.
 
-For Google sign-in in Layer 3, set `GOOGLE_CLIENT_ID` in the backend process and `VITE_GOOGLE_CLIENT_ID` in `client/.env.local` to the same **public** Google web client ID. Do not copy the OAuth client JSON or its client secret into the frontend or commit local credential files. `FRONTEND_ORIGIN` must match the browser origin (default `http://localhost:5173`).
+For Google sign-in, set `GOOGLE_CLIENT_ID` in the backend process and `VITE_GOOGLE_CLIENT_ID` in `client/.env.local` to the same **public** Google web client ID. To use the local client JSON already present at the repository root without printing or copying its secret, in the backend PowerShell window run:
+
+```powershell
+$oauthClient = Get-Content .\client_secret_apps.googleusercontent.com.json | ConvertFrom-Json
+$env:GOOGLE_CLIENT_ID = $oauthClient.web.client_id
+$oauthClient = $null
+.\gradlew.bat bootRun
+```
+
+In the frontend PowerShell window, configure the same public client ID from the JSON without writing its secret:
+
+```powershell
+Set-Location client
+$oauthClient = Get-Content ..\client_secret_apps.googleusercontent.com.json | ConvertFrom-Json
+"VITE_GOOGLE_CLIENT_ID=$($oauthClient.web.client_id)" | Set-Content .env.local
+$oauthClient = $null
+npm run dev
+```
+
+The client ID is public browser configuration; never put the client secret in Vite configuration or source control. The local client must authorize `http://localhost:5173`. `FRONTEND_ORIGIN` must match the browser origin. Local session/CSRF cookies use `SameSite=Lax`; set `SESSION_COOKIE_SECURE=true` when serving the application over HTTPS.
 
 Backend settings (each has a local default):
 
@@ -24,6 +43,7 @@ Backend settings (each has a local default):
 | `FUSEKI_DATASET` | `empleabilidad` | Fuseki dataset name |
 | `GOOGLE_CLIENT_ID` | empty | Public GIS client ID; required when sign-in is implemented |
 | `FRONTEND_ORIGIN` | `http://localhost:5173` | React origin for browser security configuration |
+| `SESSION_COOKIE_SECURE` | `false` | Set `true` for HTTPS deployments |
 
 Set backend variables in the PowerShell window that starts Spring Boot, for example:
 
@@ -57,6 +77,10 @@ Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` request
 
 - `GET http://localhost:8080/api/health` reports whether the Spring Boot API is available and does not depend on Fuseki.
 - `GET http://localhost:8080/api/health/fuseki` runs a read-only SPARQL `ASK {}` query. It returns `200` when the configured dataset responds and `503` when Fuseki cannot be reached.
+- `GET http://localhost:8080/api/auth/csrf` returns a CSRF token and sets the readable `XSRF-TOKEN` cookie. Send the returned token as `X-XSRF-TOKEN` on authentication/sign-out POST requests.
+- `POST http://localhost:8080/api/auth/google` accepts the GIS credential in `{"credential":"..."}`. Google signature, issuer, audience, expiration, and verified email are checked server-side; the raw credential is never stored. A successful response establishes an HTTP-only app session and does not return the stable Google subject.
+- `GET http://localhost:8080/api/auth/me` returns the signed-in user's display information; `POST http://localhost:8080/api/auth/logout` invalidates the application session. Other `/api/**` routes require authentication. Profile ownership enforcement is implemented with profile resources in Layer 4.
+- To manually verify a real Google sign-in, start both services using the environment setup above, open `http://localhost:5173`, use Google's **Sign in with Google** button, and confirm the signed-in email is shown. Sign out and confirm the app returns to the Google button. No password form is provided.
 - Fuseki graph access uses Apache Jena ARQ with a five-second query timeout. Offer reads use bounded pages (maximum 50) and map offers, employers, requirements, candidate competency scales, MCER levels, and recommendation concepts while preserving RDF IRIs. Offers with past end dates or excluded statuses (`cerrada`, `expirada`, `cubierta`) are non-current. Without an end date, only explicitly recognized active statuses (`abierta`, `vigente`, `publicada`, `activa`, `open`, `active`, `published`) are current. If both end date and status are missing, or a status is unrecognized, the listing is not considered current. The live graph has no status literals; broaden the recognized list only when actual source values are confirmed.
 - To run the opt-in integration test against the configured live Fuseki dataset, set `$env:FUSEKI_INTEGRATION = "true"` before running `.\gradlew.bat test`. The default test suite uses local RDF fixtures and does not require Fuseki.
 
