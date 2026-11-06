@@ -54,6 +54,21 @@ class FusekiGraphClientTest {
         }
     }
 
+    @Test
+    void reportsFusekiUpdateFailuresInsteadOfTreatingThemAsSuccessfulWrites() throws IOException {
+        server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        server.createContext("/empleabilidad/update", exchange -> {
+            exchange.getRequestBody().readAllBytes();
+            byte[] response = "Fuseki update unavailable".getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(503, response.length);
+            exchange.getResponseBody().write(response);
+            exchange.close();
+        });
+        server.start();
+
+        assertThrows(FusekiGraphException.class, () -> client().update("INSERT DATA {}"));
+    }
+
     private FusekiGraphClient client() {
         return new FusekiGraphClient("http://127.0.0.1:" + server.getAddress().getPort(), "empleabilidad");
     }

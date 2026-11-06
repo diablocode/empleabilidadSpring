@@ -1,6 +1,6 @@
 # Empleabilidad Implementation Plan
 
-**Status:** Draft — Layer 0 is complete; implementation decisions remain  
+**Status:** Layers 0–4 are complete; recommendation and UI layers remain.
 **Related document:** [PRD.md](PRD.md)  
 **Plan date:** 2026-11-06
 
@@ -151,22 +151,25 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 
 ### Layer 4 — User profile storage and API
 
+**Status:** Complete. Authenticated profile create/read/update/delete is stored in Fuseki with per-Google-subject ownership, input validation, and source-offer preservation.
+
 **Purpose:** Let each authenticated user create and maintain the RDF profile used for recommendations.
 
-**Work**
+**Delivered**
 
-- Define profile fields from ontology-supported concepts: education, work experience, competencies, skills, soft skills, language levels, competence rankings, and optional socioemotional and professional-network data. Add name/contact RDF predicates through a reviewed ontology extension or approved mapping; do not silently reuse generic `emp:nombre` or other broad predicates without agreeing on semantics.
-- Keep socioemotional and professional-network fields optional. If values are provided and affect ranking, ensure the reason is visible, the user can understand the signal, and missing values do not penalize profile completeness.
-- Design how profiles are represented in the shared Fuseki graph, including stable opaque user linkage, permitted profile predicates, and safe updates. Keep user-owned candidate resources distinct from source offer/employer resources; constrain updates so a candidate can only change their own profile and source data cannot be altered through profile operations.
-- Implement read/create/update operations scoped to the authenticated user's stable identity.
-- Validate submitted fields and keep application-controlled profile predicates separate from job-source data.
-- Define behavior for absent profiles, incomplete profiles, and graph write errors.
+- Added `GET`, `PUT`, and `DELETE /api/profile`, always scoped to the authenticated session's Google `sub`; no client-supplied profile identifier is accepted. `PUT` creates or replaces only that user's profile, and `DELETE` is scoped to the same derived IRI.
+- Derive the candidate IRI with SHA-256 from the stable Google subject; do not persist or expose the raw subject. Generated child IRIs stay under that candidate's private profile namespace.
+- Map candidate name/contact to `emp:nombre`, `emp:correoContacto`, and optional `emp:telefonoContacto`. Map education, experience, skills, soft skills, competency rankings, MCER languages, optional socioemotional factors, and professional people/groups using the ontology's classes and properties. Generic `emp:nombre`, `emp:descripcion`, and date predicates are used only for the corresponding entity label, description, and dates.
+- Treat socioemotional factors and professional contacts as optional; socioemotional factors are descriptive, with optional method/context, and do not receive invented numeric scales. Empty optional sections are valid.
+- Validate required name/email, contact format, collection sizes, text lengths, dates, 1–5 competency rankings, competency IRIs, and MCER concept IRIs. Missing profiles return `404`; invalid input returns `400`; graph availability/write failures return `503`; malformed stored profile RDF returns `502`.
+- Constrain SPARQL updates to the user's candidate predicates and child-resource IRIs. Profile API updates never select or mutate source `OfertaLaboral` or `Empleador` triples.
 
 **Verification**
 
-- Tests prove one user cannot read, overwrite, or delete another user's profile.
-- Integration tests verify profile round-tripping through Fuseki.
-- Invalid values and Fuseki write failures are reported explicitly.
+- **Passed:** API tests verify unauthenticated access is rejected, writes require CSRF, invalid profiles are rejected, and read/write/delete calls use only the authenticated subject.
+- **Passed:** Repository tests verify opaque identity derivation and the restricted profile update shape.
+- **Passed:** Forced full test run with live Fuseki verified profile RDF round-tripping, separation between two users, profile deletion, and preservation of the existing source offers.
+- **Passed:** `git diff --check`.
 
 **Dependencies:** Layers 2 and 3; profile vocabulary and storage design from Layer 0.
 

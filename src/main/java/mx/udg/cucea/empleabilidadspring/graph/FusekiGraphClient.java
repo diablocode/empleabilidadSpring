@@ -6,8 +6,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.shared.JenaException;
 import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
+import org.apache.jena.sparql.exec.http.UpdateExecutionHTTP;
+import org.apache.jena.update.UpdateFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +40,34 @@ public class FusekiGraphClient {
             return result;
         } catch (JenaException exception) {
             throw new FusekiGraphException("Fuseki graph query failed or returned an invalid RDF response.", exception);
+        } catch (HttpException exception) {
+            throw new FusekiGraphException("Fuseki graph query failed or returned an invalid RDF response.", exception);
+        }
+    }
+
+    public boolean ask(String sparql) {
+        try (QueryExecution execution = QueryExecutionHTTP.service(queryEndpoint.toString())
+                .query(sparql)
+                .timeout(QUERY_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()) {
+            return execution.execAsk();
+        } catch (JenaException exception) {
+            throw new FusekiGraphException("Fuseki graph validation query failed.", exception);
+        } catch (HttpException exception) {
+            throw new FusekiGraphException("Fuseki graph validation query failed.", exception);
+        }
+    }
+
+    public void update(String sparql) {
+        try {
+            UpdateExecutionHTTP.service(updateEndpoint())
+                    .update(UpdateFactory.create(sparql))
+                    .build()
+                    .execute();
+        } catch (JenaException exception) {
+            throw new FusekiGraphException("Fuseki graph update failed.", exception);
+        } catch (HttpException exception) {
+            throw new FusekiGraphException("Fuseki graph update failed.", exception);
         }
     }
 
@@ -48,6 +79,12 @@ public class FusekiGraphClient {
             return execution.execAsk();
         } catch (JenaException exception) {
             throw new FusekiGraphException("Fuseki health query failed.", exception);
+        } catch (HttpException exception) {
+            throw new FusekiGraphException("Fuseki health query failed.", exception);
         }
+    }
+
+    private String updateEndpoint() {
+        return queryEndpoint.toString().replaceFirst("/sparql$", "/update");
     }
 }

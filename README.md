@@ -84,6 +84,36 @@ Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` request
 - Fuseki graph access uses Apache Jena ARQ with a five-second query timeout. Offer reads use bounded pages (maximum 50) and map offers, employers, requirements, candidate competency scales, MCER levels, and recommendation concepts while preserving RDF IRIs. Offers with past end dates or excluded statuses (`cerrada`, `expirada`, `cubierta`) are non-current. Without an end date, only explicitly recognized active statuses (`abierta`, `vigente`, `publicada`, `activa`, `open`, `active`, `published`) are current. If both end date and status are missing, or a status is unrecognized, the listing is not considered current. The live graph has no status literals; broaden the recognized list only when actual source values are confirmed.
 - To run the opt-in integration test against the configured live Fuseki dataset, set `$env:FUSEKI_INTEGRATION = "true"` before running `.\gradlew.bat test`. The default test suite uses local RDF fixtures and does not require Fuseki.
 
+## User profile API
+
+The authenticated profile endpoints store each user's candidate profile in the Fuseki default graph:
+
+- `GET /api/profile` returns the signed-in user's profile or `404 profile_not_found` if one has not been created.
+- `PUT /api/profile` creates or replaces only the signed-in user's profile.
+- `DELETE /api/profile` deletes only the signed-in user's profile and returns `204`.
+
+All three endpoints require the application session. `PUT` and `DELETE` require the CSRF cookie and `X-XSRF-TOKEN` header described above. The profile identifier is a SHA-256-derived opaque IRI from Google's stable subject claim; the raw subject is never stored, accepted from the client, or returned. Profile updates are restricted to that user's candidate and generated child resources, not offers or employers. Fuseki failures return `503`; a malformed stored profile returns `502`.
+
+The JSON profile contains required `name` and `contactEmail`, optional `contactPhone`, and optional lists named `competencies`, `languages`, `education`, `workExperience`, `skills`, `softSkills`, `socioemotionalFactors`, and `professionalContacts`. An entry has a `name`, optional `description`, and optional ISO dates `startDate`/`endDate`. Competency rankings require an existing graph `competencyIri` and a score from 1 to 5; languages require a graph `levelIri` from the MCER concept scheme. Socioemotional factors are descriptive and may include an `evaluationMethod`; no numeric value is stored because the ontology defines no shared scale for those factors. Professional contacts represent real people or groups known professionally, not electronic social networks. Empty optional lists are accepted and do not make a profile invalid.
+
+Example create/update request:
+
+```json
+{
+  "name": "Example Candidate",
+  "contactEmail": "candidate@example.com",
+  "contactPhone": null,
+  "competencies": [],
+  "languages": [],
+  "education": [],
+  "workExperience": [],
+  "skills": [],
+  "softSkills": [],
+  "socioemotionalFactors": [],
+  "professionalContacts": []
+}
+```
+
 ## Verification
 
 Run backend tests and build the frontend:
