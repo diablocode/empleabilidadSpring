@@ -1,6 +1,17 @@
 HELP.md
 .gradle
 build/
+client_secret*.json
+*googleusercontent.com*.json
+.env
+.env.*
+!.env.example
+client/.env
+client/.env.*
+!client/.env.example
+client/node_modules/
+client/dist/
+/data/local/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
