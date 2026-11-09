@@ -48,6 +48,11 @@ public class OpportunityApiExceptionHandler {
                 .body(new ApiError("opportunity_data_limit_exceeded", "The opportunity dataset exceeds the supported size."));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ApiError> invalidArgument(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(new ApiError("invalid_request", exception.getMessage()));
+    }
+
     public record ApiError(String code, String message) {
     }
 }

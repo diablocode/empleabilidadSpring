@@ -11,6 +11,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import mx.udg.cucea.empleabilidadspring.auth.AuthenticatedUser;
+import mx.udg.cucea.empleabilidadspring.graph.FusekiCompetencyRepository;
+import mx.udg.cucea.empleabilidadspring.opportunity.PublicResourceIds;
 
 @Service
 public class ProfileService {
@@ -18,9 +20,11 @@ public class ProfileService {
     private static final int MAX_ITEMS = 100;
 
     private final FusekiProfileRepository repository;
+    private final FusekiCompetencyRepository competencyRepository;
 
-    public ProfileService(FusekiProfileRepository repository) {
+    public ProfileService(FusekiProfileRepository repository, FusekiCompetencyRepository competencyRepository) {
         this.repository = repository;
+        this.competencyRepository = competencyRepository;
     }
 
     public UserProfile get(AuthenticatedUser user) {
@@ -29,9 +33,61 @@ public class ProfileService {
     }
 
     public UserProfile save(AuthenticatedUser user, UserProfile profile) {
-        validate(profile);
-        repository.replace(user.subject(), profile);
-        return profile;
+        UserProfile resolvedProfile = resolveCompetencyIds(profile);
+        validate(resolvedProfile);
+        repository.replace(user.subject(), resolvedProfile);
+        return resolvedProfile;
+    }
+
+    private UserProfile resolveCompetencyIds(UserProfile profile) {
+        if (profile == null || profile.competencies().isEmpty()) {
+            return profile;
+        }
+        java.util.Map<String, String> graphCompetencies = new java.util.HashMap<>();
+        java.util.Set<String> requestedIds = profile.competencies().stream()
+                .filter(java.util.Objects::nonNull)
+                .map(CompetencyRanking::competencyIri)
+                .filter(java.util.Objects::nonNull)
+                .collect(java.util.stream.Collectors.toSet());
+        for (int offset = 0; offset <= 10_000; offset += 100) {
+            List<mx.udg.cucea.empleabilidadspring.graph.GraphModels.Competency> page =
+                    competencyRepository.findPage(offset, 100);
+            page.forEach(competency -> graphCompetencies.put(
+                    PublicResourceIds.fromIri(competency.iri()), competency.iri()
+            ));
+            requestedIds.removeAll(graphCompetencies.keySet());
+            if (page.size() < 100 || requestedIds.isEmpty()) {
+                break;
+            }
+            if (offset == 10_000) {
+                throw invalid("The competency catalog exceeds the supported size.");
+            }
+        }
+        List<CompetencyRanking> resolvedCompetencies = profile.competencies().stream()
+                .map(competency -> {
+                    if (competency == null || competency.competencyIri() == null) {
+                        return competency;
+                    }
+                    String iri = graphCompetencies.get(competency.competencyIri());
+                    if (iri == null) {
+                        throw invalid("A selected competency does not exist in the opportunity catalog.");
+                    }
+                    return new CompetencyRanking(iri, competency.score());
+                })
+                .toList();
+        return new UserProfile(
+                profile.name(),
+                profile.contactEmail(),
+                profile.contactPhone(),
+                resolvedCompetencies,
+                profile.languages(),
+                profile.education(),
+                profile.workExperience(),
+                profile.skills(),
+                profile.softSkills(),
+                profile.socioemotionalFactors(),
+                profile.professionalContacts()
+        );
     }
 
     public void delete(AuthenticatedUser user) {

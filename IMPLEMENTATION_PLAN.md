@@ -204,6 +204,7 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 
 - Documented the current-user, profile, opportunity listing/detail, recommendation, health, CSRF, sign-in, and sign-out routes, including session and CSRF requirements.
 - Added authenticated paginated opportunity listing and detail routes with bounded `offset`/`limit`, optional current-only filtering, and opaque stable offer IDs.
+- Added an authenticated competency catalog and updated profile API values to use opaque competency IDs and CEFR labels instead of exposing ontology IRIs.
 - Defined typed opportunity and pagination responses that expose supported user-facing fields and freshness, without RDF IRIs, raw status literals, or invented application links.
 - Standardized opportunity API errors for invalid requests, missing IDs, unavailable/invalid graph data, and graph size limits.
 - Documented existing profile and recommendation response states and error behavior alongside the new opportunity contract.
@@ -217,22 +218,24 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 
 ### Layer 7 — React application
 
+**Status:** Complete.
+
 **Purpose:** Deliver the job-seeker experience against the API contract.
 
-**Work**
+**Delivered**
 
-- Add React routing and shared API/authentication handling.
-- Build sign-in and signed-in navigation states.
-- Build profile creation/editing based on the approved profile schema, with validation and clear completion guidance.
-- Build ranked recommendation cards/list, match-reason presentation, and available opportunity details or application links.
-- Implement loading, empty, incomplete-profile, unauthenticated, and service-error states.
-- Support keyboard navigation, accessible labels, responsive layouts, and appropriate color contrast.
+- Added client-side navigation for profile, recommendations, and opportunity detail; shared API and CSRF helpers handle structured errors and expired sessions.
+- Kept Google's hosted GIS sign-in boundary and built signed-out, authenticated navigation, current-user, and sign-out states.
+- Added profile create/edit forms for all approved fields, with optional education, experience, skills, socioemotional factors, and professional contacts. Competencies use the API's opaque catalog IDs; language input uses MCER labels.
+- Added ranked opportunity cards with match reasons and coverage, plus detail views for available offer information. No application link is shown unless the API exposes a verified destination; the current contract does not define one.
+- Implemented loading, empty, incomplete-profile, unauthenticated, validation, and service-error states.
+- Added responsive layouts, keyboard-operable controls, semantic headings/labels, focus styles, and reduced-motion support.
 
 **Verification**
 
-- Component tests cover key flows and state rendering.
-- End-to-end tests cover the Google sign-in handoff (using a testable auth setup, without automating Google's UI), profile save, and recommendation display.
-- Manually review the core flows at mobile and desktop viewport sizes.
+- Component/integration tests cover signed-out and expired-session states, profile editing/save and validation, recommendation matches/empty states, and opportunity details without automating Google's UI.
+- Frontend production build/type-check and component test suite pass.
+- Manual mobile/desktop browser review remains an environment-dependent release check.
 
 **Dependency:** Layer 6 API contract; profile UI waits for approved fields.
 

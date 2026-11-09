@@ -88,13 +88,14 @@ Except for health checks, CSRF-token retrieval, Google sign-in, and sign-out, `/
 | `POST /api/auth/logout` | CSRF required; session optional | Ends the current session when present; returns `204` |
 | `GET /api/profile` | Authenticated | Reads the user's profile; `404 profile_not_found` if absent |
 | `PUT /api/profile`, `DELETE /api/profile` | Authenticated + CSRF | Creates/replaces or deletes only the current user's profile |
+| `GET /api/competencies` | Authenticated | Lists available competencies using opaque IDs; supports `offset` (default `0`) and `limit` (default `100`, max `100`) |
 | `GET /api/opportunities` | Authenticated | Lists opportunities; supports `offset` (default `0`, max `10000`), `limit` (default `20`, range `1`–`50`), and `currentOnly` (default `false`) |
 | `GET /api/opportunities/{offerId}` | Authenticated | Reads an opportunity using the opaque UUID `offerId` from a listing; unknown IDs return `404 opportunity_not_found` |
 | `GET /api/recommendations` | Authenticated | Returns up to 20 ranked recommendations for the user's profile |
 
 Opportunity listing returns `offset`, `limit`, `count`, `hasMore`, and `opportunities`. Each opportunity contains an opaque `offerId`, title, available employer/description/location/modality/expiry fields, a freshness state (`CURRENT`, `EXPIRED`, `CLOSED`, `UNKNOWN_STATUS`, or `INDETERMINATE`), and competency requirements with available names, levels, scale, and mandatory flags. The `currentOnly=true` filter includes only `CURRENT` listings. Pagination is zero-based; an offset beyond the available results returns an empty page. The API does not expose RDF IRIs or invent application links.
 
-Validation errors return `400 invalid_request`; missing opportunities return `404 opportunity_not_found`; unavailable graph data returns `503 opportunity_data_unavailable`; malformed graph data returns `502 opportunity_data_invalid`; oversized graph scans return `503 opportunity_data_limit_exceeded`. Pagination and current-only filtering are applied before returning a bounded page. Opportunity API response fields intentionally exclude raw RDF properties and graph identifiers.
+Validation errors return `400 invalid_request`; missing opportunities return `404 opportunity_not_found`; unavailable graph data returns `503 opportunity_data_unavailable`; malformed graph data returns `502 opportunity_data_invalid`; oversized graph scans return `503 opportunity_data_limit_exceeded`. Pagination and current-only filtering are applied before returning a bounded page. Opportunity and competency API response fields intentionally exclude raw RDF properties and graph identifiers. Profile competency values use catalog `competencyId` values rather than RDF IRIs, and language levels use CEFR labels (`A1`–`C2`) rather than ontology resource identifiers.
 
 Google credential failures return `401 invalid_google_credential`; missing server-side Google configuration returns `503 google_auth_not_configured`. Profile validation returns `400 invalid_profile`; a missing profile returns `404 profile_not_found`; profile graph failures return `503 profile_store_unavailable` or `502 profile_graph_invalid`. Recommendation graph failures use `503 recommendation_data_unavailable` or `502 recommendation_data_invalid`.
 
@@ -103,6 +104,20 @@ Google credential failures return `401 invalid_google_credential`; missing serve
 `GET /api/recommendations` requires an authenticated session and returns at most 20 current opportunities. It returns `READY` with ranked results, `INCOMPLETE_PROFILE` with `missingProfileFields: ["competencies"]` when no saved profile or competency rankings exist, or `NO_MATCHES` when a complete profile has no matching current opportunities. Fuseki failures return `503 recommendation_data_unavailable`; invalid graph data returns `502 recommendation_data_invalid`.
 
 Ranking is deterministic and uses lexicographic coverage criteria, not an unexplained weighted score: (1) the fraction of identified mandatory competency requirements matched, (2) the fraction of mandatory expected levels met where the requirement explicitly declares the same supported 1–5 competency scale as the candidate profile, then (3) the fraction of all identified competency requirements matched. Ties are ordered by offer IRI. Missing competencies are not treated as matches; missing or incompatible scales do not produce level comparisons. Reasons and the returned coverage counts come from these same inputs. Language, education, experience, skills, socioemotional factors, and professional contacts are not currently ranking signals because the offer graph does not provide corresponding comparable requirements. Recommendations are relevance guidance, not eligibility or hiring guarantees. The current local offers are expired, so the endpoint can correctly return `NO_MATCHES` until current offers are added.
+
+## React client
+
+The client provides session-aware navigation for profile editing, ranked recommendations, and opportunity detail. Profile forms expose optional education, experience, skills, socioemotional, and professional-contact sections; competency selection uses the authenticated opaque-ID catalog and CEFR levels use labels. Recommendation and opportunity views explain matches, distinguish empty/incomplete/error states, and do not invent application links. If an authenticated API request returns `401`, the client returns to the signed-out state.
+
+Run the frontend type-check/build and component tests from `client/`:
+
+```powershell
+npm ci
+npm run build
+npm test
+```
+
+Tests mock the API and Google Identity Services callback boundary; they do not automate Google's hosted sign-in UI.
 
 ## User profile API
 
@@ -114,7 +129,7 @@ The authenticated profile endpoints store each user's candidate profile in the F
 
 All three endpoints require the application session. `PUT` and `DELETE` require the CSRF cookie and `X-XSRF-TOKEN` header described above. The profile identifier is a SHA-256-derived opaque IRI from Google's stable subject claim; the raw subject is never stored, accepted from the client, or returned. Profile updates are restricted to that user's candidate and generated child resources, not offers or employers. Fuseki failures return `503`; a malformed stored profile returns `502`.
 
-The JSON profile contains required `name` and `contactEmail`, optional `contactPhone`, and optional lists named `competencies`, `languages`, `education`, `workExperience`, `skills`, `softSkills`, `socioemotionalFactors`, and `professionalContacts`. An entry has a `name`, optional `description`, and optional ISO dates `startDate`/`endDate`. Competency rankings require an existing graph `competencyIri` and a score from 1 to 5; languages require a graph `levelIri` from the MCER concept scheme. Socioemotional factors are descriptive and may include an `evaluationMethod`; no numeric value is stored because the ontology defines no shared scale for those factors. Professional contacts represent real people or groups known professionally, not electronic social networks. Empty optional lists are accepted and do not make a profile invalid.
+The JSON profile contains required `name` and `contactEmail`, optional `contactPhone`, and optional lists named `competencies`, `languages`, `education`, `workExperience`, `skills`, `softSkills`, `socioemotionalFactors`, and `professionalContacts`. An entry has a `name`, optional `description`, and optional ISO dates `startDate`/`endDate`. Competency rankings use `competencyId` from `GET /api/competencies` and a score from 1 to 5; languages use an MCER level label from `A1` through `C2`. The API translates these public values to graph resources internally. Socioemotional factors are descriptive and may include an `evaluationMethod`; no numeric value is stored because the ontology defines no shared scale for those factors. Professional contacts represent real people or groups known professionally, not electronic social networks. Empty optional lists are accepted and do not make a profile invalid.
 
 Example create/update request:
 
@@ -143,6 +158,7 @@ Run backend tests and build the frontend:
 Set-Location client
 npm ci
 npm run build
+npm test
 ```
 
 Local-only environment files, node modules, build outputs, Google client JSON files, and files placed under `data/local/` are excluded from version control.

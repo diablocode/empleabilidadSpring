@@ -2,8 +2,6 @@ package mx.udg.cucea.empleabilidadspring.opportunity;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
-
 import mx.udg.cucea.empleabilidadspring.graph.EmpleabilidadVocabulary;
 import mx.udg.cucea.empleabilidadspring.graph.GraphModels.CompetencyRequirement;
 import mx.udg.cucea.empleabilidadspring.graph.GraphModels.Offer;
@@ -39,7 +37,7 @@ public record OpportunityResponse(
     }
 
     static String publicId(Offer offer) {
-        return UUID.nameUUIDFromBytes(offer.iri().getBytes(java.nio.charset.StandardCharsets.UTF_8)).toString();
+        return PublicResourceIds.fromIri(offer.iri());
     }
 
     public enum Freshness {
@@ -55,6 +53,7 @@ public record OpportunityResponse(
     }
 
     public record Requirement(
+            String competencyId,
             String competency,
             Integer expectedLevel,
             String expectedLevelScale,
@@ -66,6 +65,9 @@ public record OpportunityResponse(
                     .map(ignored -> "COMPETENCY_1_TO_5")
                     .orElse(null);
             return new Requirement(
+                    requirement.competency()
+                            .map(competency -> PublicResourceIds.fromIri(competency.iri()))
+                            .orElse(null),
                     requirement.competency()
                             .flatMap(competency -> competency.name())
                             .orElse(null),

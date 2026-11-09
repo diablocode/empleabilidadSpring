@@ -22,13 +22,20 @@ public class CandidateProfileController {
     }
 
     @GetMapping
-    public UserProfile get(Authentication authentication) {
-        return profileService.get(authenticatedUser(authentication));
+    public ProfileApiModel.Response get(Authentication authentication) {
+        return ProfileApiModel.Response.from(profileService.get(authenticatedUser(authentication)));
     }
 
     @PutMapping
-    public UserProfile save(@RequestBody(required = false) UserProfile profile, Authentication authentication) {
-        return profileService.save(authenticatedUser(authentication), profile);
+    public ProfileApiModel.Response save(
+            @RequestBody(required = false) ProfileApiModel.Request profile,
+            Authentication authentication
+    ) {
+        UserProfile saved = profileService.save(
+                authenticatedUser(authentication),
+                profile == null ? null : profile.toDomain()
+        );
+        return ProfileApiModel.Response.from(saved);
     }
 
     @DeleteMapping

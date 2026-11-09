@@ -164,7 +164,7 @@ public class RdfDomainMapper {
         );
     }
 
-    private Competency mapCompetency(Model model, Resource resource) {
+    public Competency mapCompetency(Model model, Resource resource) {
         requireType(model, resource, "Competencia");
         return new Competency(
                 resourceIri(resource),

@@ -25,6 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import mx.udg.cucea.empleabilidadspring.auth.AuthenticatedUser;
+import mx.udg.cucea.empleabilidadspring.opportunity.PublicResourceIds;
 
 @SpringBootTest(properties = "app.google.client-id=test-google-client-id")
 @AutoConfigureMockMvc
@@ -66,6 +67,32 @@ class ProfileControllerSecurityTest {
 
         verify(repository).findBySubject(firstUser.subject());
         verify(repository).delete(firstUser.subject());
+    }
+
+    @Test
+    void profileResponsesUsePublicCompetencyIdsAndLanguageLabels() throws Exception {
+        AuthenticatedUser user = user("google-subject-three");
+        UserProfile profile = new UserProfile(
+                "Third User", "third@example.com", null,
+                java.util.List.of(new UserProfile.CompetencyRanking(
+                        "https://example.test/competency/java", 4
+                )),
+                java.util.List.of(new UserProfile.Language(
+                        "English",
+                        mx.udg.cucea.empleabilidadspring.graph.EmpleabilidadVocabulary.NS + "nivelB2"
+                )),
+                java.util.List.of(), java.util.List.of(), java.util.List.of(), java.util.List.of(),
+                java.util.List.of(), java.util.List.of()
+        );
+        when(repository.findBySubject(user.subject())).thenReturn(Optional.of(profile));
+
+        mockMvc.perform(get("/api/profile").session(session(user)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.competencies[0].competencyId")
+                        .value(PublicResourceIds.fromIri("https://example.test/competency/java")))
+                .andExpect(jsonPath("$.competencies[0].competencyIri").doesNotExist())
+                .andExpect(jsonPath("$.languages[0].level").value("B2"))
+                .andExpect(jsonPath("$.languages[0].levelIri").doesNotExist());
     }
 
     @Test

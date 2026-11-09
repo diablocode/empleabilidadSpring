@@ -53,7 +53,7 @@ class OpportunityControllerContractTest {
                 null,
                 Freshness.CURRENT,
                 List.of(new OpportunityResponse.Requirement(
-                        "Java", 4, "COMPETENCY_1_TO_5", true
+                        "competency-public-id", "Java", 4, "COMPETENCY_1_TO_5", true
                 ))
         );
         when(opportunityService.list(0, 20, true)).thenReturn(
