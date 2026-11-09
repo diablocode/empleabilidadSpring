@@ -57,6 +57,7 @@ public class RdfDomainMapper {
                 resources(model, resource, "requiereCompetencia").stream()
                         .map(requirement -> mapRequirement(model, requirement))
                         .toList(),
+                optionalLiteral(model, resource, "descripcion"),
                 optionalLiteral(model, resource, "ubicacion"),
                 optionalLiteral(model, resource, "modalidad"),
                 endDate,
@@ -111,6 +112,15 @@ public class RdfDomainMapper {
     private CompetencyRequirement mapRequirement(Model model, Resource resource) {
         requireType(model, resource, "RequerimientoDeCompetencia");
         OptionalInt expectedLevel = optionalInteger(model, resource, "nivelEsperado");
+        Optional<String> scaleIri = optionalLiteral(model, resource, "escala");
+        if (scaleIri.filter((EmpleabilidadVocabulary.NS + "escalaCompetencia1a5")::equals).isPresent()
+                && expectedLevel.isPresent()
+                && (expectedLevel.getAsInt() < 1 || expectedLevel.getAsInt() > 5)) {
+            throw new GraphMappingException(
+                    "A requirement level using emp:escalaCompetencia1a5 must be between 1 and 5 on "
+                            + resourceIri(resource) + "."
+            );
+        }
         Optional<Boolean> mandatory = optionalLiteral(model, resource, "esObligatorio")
                 .map(value -> parseBoolean(value, resource, "esObligatorio"));
         return new CompetencyRequirement(
@@ -118,6 +128,7 @@ public class RdfDomainMapper {
                 optionalResource(model, resource, "especificaCompetencia")
                         .map(value -> mapCompetency(model, value)),
                 expectedLevel,
+                scaleIri,
                 mandatory
         );
     }

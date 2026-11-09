@@ -1,5 +1,6 @@
 package mx.udg.cucea.empleabilidadspring.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,18 @@ public class FusekiOfferRepository {
                 "ORDER BY STR(?offer) LIMIT " + limit + " OFFSET " + offset
         ));
         return mapOffers(model);
+    }
+
+    public List<Offer> findAllOffers() {
+        List<Offer> offers = new ArrayList<>();
+        for (int offset = 0; offset <= 10_000; offset += MAX_PAGE_SIZE) {
+            List<Offer> page = findPage(offset, MAX_PAGE_SIZE);
+            offers.addAll(page);
+            if (page.size() < MAX_PAGE_SIZE) {
+                return List.copyOf(offers);
+            }
+        }
+        throw new IllegalStateException("The graph contains more offers than the supported scan limit.");
     }
 
     public Optional<Offer> findByIdentifier(String identifier) {

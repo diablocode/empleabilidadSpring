@@ -35,9 +35,11 @@ class RdfDomainMapperTest {
         Model model = parse("""
                 @prefix emp: <%s> .
                 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+                @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
                 emp:offer a emp:OfertaLaboral ;
                     emp:identificador "job-1" ;
                     emp:nombre "Backend developer" ;
+                    emp:descripcion "Build backend services." ;
                     emp:fechaFin "2026-12-01"^^<http://www.w3.org/2001/XMLSchema#date> ;
                     emp:publicadoPor emp:employer ;
                     emp:requiereCompetencia emp:req .
@@ -45,20 +47,23 @@ class RdfDomainMapperTest {
                 emp:req a emp:RequerimientoDeCompetencia ;
                     emp:especificaCompetencia emp:competency ;
                     emp:nivelEsperado 4 ;
+                    emp:escala "%sescalaCompetencia1a5"^^xsd:anyURI ;
                     emp:esObligatorio true .
                 emp:competency a emp:Competencia ; emp:nombre "Java" .
                 emp:skill a emp:Habilidad ; emp:nombre "Not a competency" .
-                """.formatted(EX));
+                """.formatted(EX, EX));
 
         Offer offer = mapper.mapOffer(model, model.createResource(EX + "offer"));
 
         assertEquals("Backend developer", offer.name().orElseThrow());
+        assertEquals("Build backend services.", offer.description().orElseThrow());
         assertEquals("Example employer", offer.employer().orElseThrow().name().orElseThrow());
         assertEquals(1, offer.competencyRequirements().size());
         var requirement = offer.competencyRequirements().getFirst();
         assertEquals("Java", requirement.competency().orElseThrow().name().orElseThrow());
         assertTrue(requirement.expectedLevel().isPresent());
         assertEquals(4, requirement.expectedLevel().getAsInt());
+        assertEquals(EX + "escalaCompetencia1a5", requirement.scaleIri().orElseThrow());
         assertEquals(true, requirement.mandatory().orElseThrow());
         assertEquals(OfferFreshness.CURRENT, offer.freshness());
     }

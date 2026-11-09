@@ -128,10 +128,24 @@ public class FusekiProfileRepository {
 
     private UserProfile mapProfile(Model model, Resource candidate) {
         List<CompetencyRanking> competencies = linkedResources(model, candidate, "tieneRanking").stream()
-                .map(ranking -> new CompetencyRanking(
-                        requiredResourceIri(model, ranking, "evaluaCompetencia"),
-                        requiredInteger(model, ranking, "puntuacion")
-                ))
+                .map(ranking -> {
+                    String scaleIri = requiredLiteral(model, ranking, "escala");
+                    if (!scaleIri.equals(EmpleabilidadVocabulary.NS + "escalaCompetencia1a5")) {
+                        throw new GraphMappingException(
+                                "A stored profile competency ranking uses an unsupported scale."
+                        );
+                    }
+                    int score = requiredInteger(model, ranking, "puntuacion");
+                    if (score < 1 || score > 5) {
+                        throw new GraphMappingException(
+                                "A stored profile competency score must be between 1 and 5."
+                        );
+                    }
+                    return new CompetencyRanking(
+                            requiredResourceIri(model, ranking, "evaluaCompetencia"),
+                            score
+                    );
+                })
                 .toList();
         List<Language> languages = linkedResources(model, candidate, "dominaLenguaje").stream()
                 .map(language -> new Language(

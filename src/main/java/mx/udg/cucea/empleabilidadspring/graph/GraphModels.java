@@ -50,6 +50,7 @@ public final class GraphModels {
             String iri,
             Optional<Competency> competency,
             OptionalInt expectedLevel,
+            Optional<String> scaleIri,
             Optional<Boolean> mandatory
     ) {
     }
@@ -60,6 +61,7 @@ public final class GraphModels {
             Optional<String> name,
             Optional<Employer> employer,
             List<CompetencyRequirement> competencyRequirements,
+            Optional<String> description,
             Optional<String> location,
             Optional<String> modality,
             Optional<LocalDate> endDate,

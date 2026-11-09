@@ -11,18 +11,9 @@ Empleabilidad is being built as a React client and a Spring Boot API. The API is
 
 ## Configure local development
 
-The local defaults are non-secret and allow the backend to start without Google credentials or a running Fuseki service. Copy `client/.env.example` to `client/.env.local` to configure the frontend proxy. The root `.env.example` documents backend environment variables; Spring reads these from the process environment, not from a `.env` file.
+The local defaults are non-secret and allow the backend to start without Google credentials or a running Fuseki service. Copy `client/.env.example` to `client/.env.local` to configure the frontend proxy. The root `.env.example` documents backend environment variables; Spring reads those from the process environment, while the public Google client ID can also be loaded from `client/.env.local`.
 
-For Google sign-in, set `GOOGLE_CLIENT_ID` in the backend process and `VITE_GOOGLE_CLIENT_ID` in `client/.env.local` to the same **public** Google web client ID. To use the local client JSON already present at the repository root without printing or copying its secret, in the backend PowerShell window run:
-
-```powershell
-$oauthClient = Get-Content .\client_secret_apps.googleusercontent.com.json | ConvertFrom-Json
-$env:GOOGLE_CLIENT_ID = $oauthClient.web.client_id
-$oauthClient = $null
-.\gradlew.bat bootRun
-```
-
-In the frontend PowerShell window, configure the same public client ID from the JSON without writing its secret:
+For Google sign-in, set `VITE_GOOGLE_CLIENT_ID` in `client/.env.local` to the **public** Google web client ID. When started from the repository root, the backend imports that local file and uses the same ID automatically; setting `GOOGLE_CLIENT_ID` in the backend environment remains supported and takes precedence. To use the local client JSON already present at the repository root without printing or copying its secret, in the frontend PowerShell window run:
 
 ```powershell
 Set-Location client
@@ -41,7 +32,7 @@ Backend settings (each has a local default):
 | `SERVER_PORT` | `8080` | Spring Boot HTTP port |
 | `FUSEKI_BASE_URL` | `http://localhost:3030` | Fuseki server base URL |
 | `FUSEKI_DATASET` | `empleabilidad` | Fuseki dataset name |
-| `GOOGLE_CLIENT_ID` | empty | Public GIS client ID; required when sign-in is implemented |
+| `GOOGLE_CLIENT_ID` | `VITE_GOOGLE_CLIENT_ID` from `client/.env.local` | Public GIS client ID; an explicit backend environment value takes precedence |
 | `FRONTEND_ORIGIN` | `http://localhost:5173` | React origin for browser security configuration |
 | `SESSION_COOKIE_SECURE` | `false` | Set `true` for HTTPS deployments |
 
@@ -83,6 +74,35 @@ Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` request
 - To manually verify a real Google sign-in, start both services using the environment setup above, open `http://localhost:5173`, use Google's **Sign in with Google** button, and confirm the signed-in email is shown. Sign out and confirm the app returns to the Google button. No password form is provided.
 - Fuseki graph access uses Apache Jena ARQ with a five-second query timeout. Offer reads use bounded pages (maximum 50) and map offers, employers, requirements, candidate competency scales, MCER levels, and recommendation concepts while preserving RDF IRIs. Offers with past end dates or excluded statuses (`cerrada`, `expirada`, `cubierta`) are non-current. Without an end date, only explicitly recognized active statuses (`abierta`, `vigente`, `publicada`, `activa`, `open`, `active`, `published`) are current. If both end date and status are missing, or a status is unrecognized, the listing is not considered current. The live graph has no status literals; broaden the recognized list only when actual source values are confirmed.
 - To run the opt-in integration test against the configured live Fuseki dataset, set `$env:FUSEKI_INTEGRATION = "true"` before running `.\gradlew.bat test`. The default test suite uses local RDF fixtures and does not require Fuseki.
+
+## API contract
+
+Except for health checks, CSRF-token retrieval, Google sign-in, and sign-out, `/api/**` endpoints require the authenticated application session. `POST`, `PUT`, and `DELETE` requests also require the CSRF cookie and matching `X-XSRF-TOKEN` header. JSON errors have the stable shape `{"code":"...","message":"..."}`.
+
+| Method and path | Access | Behavior |
+|---|---|---|
+| `GET /api/health`, `GET /api/health/fuseki` | Public | Application and graph health |
+| `GET /api/auth/csrf` | Public | Creates a session and returns a CSRF token |
+| `POST /api/auth/google` | Public + CSRF | Accepts `{"credential":"..."}`; returns the signed-in user's `email`, `name`, and `pictureUrl` |
+| `GET /api/auth/me` | Authenticated | Returns the same current-user response |
+| `POST /api/auth/logout` | CSRF required; session optional | Ends the current session when present; returns `204` |
+| `GET /api/profile` | Authenticated | Reads the user's profile; `404 profile_not_found` if absent |
+| `PUT /api/profile`, `DELETE /api/profile` | Authenticated + CSRF | Creates/replaces or deletes only the current user's profile |
+| `GET /api/opportunities` | Authenticated | Lists opportunities; supports `offset` (default `0`, max `10000`), `limit` (default `20`, range `1`–`50`), and `currentOnly` (default `false`) |
+| `GET /api/opportunities/{offerId}` | Authenticated | Reads an opportunity using the opaque UUID `offerId` from a listing; unknown IDs return `404 opportunity_not_found` |
+| `GET /api/recommendations` | Authenticated | Returns up to 20 ranked recommendations for the user's profile |
+
+Opportunity listing returns `offset`, `limit`, `count`, `hasMore`, and `opportunities`. Each opportunity contains an opaque `offerId`, title, available employer/description/location/modality/expiry fields, a freshness state (`CURRENT`, `EXPIRED`, `CLOSED`, `UNKNOWN_STATUS`, or `INDETERMINATE`), and competency requirements with available names, levels, scale, and mandatory flags. The `currentOnly=true` filter includes only `CURRENT` listings. Pagination is zero-based; an offset beyond the available results returns an empty page. The API does not expose RDF IRIs or invent application links.
+
+Validation errors return `400 invalid_request`; missing opportunities return `404 opportunity_not_found`; unavailable graph data returns `503 opportunity_data_unavailable`; malformed graph data returns `502 opportunity_data_invalid`; oversized graph scans return `503 opportunity_data_limit_exceeded`. Pagination and current-only filtering are applied before returning a bounded page. Opportunity API response fields intentionally exclude raw RDF properties and graph identifiers.
+
+Google credential failures return `401 invalid_google_credential`; missing server-side Google configuration returns `503 google_auth_not_configured`. Profile validation returns `400 invalid_profile`; a missing profile returns `404 profile_not_found`; profile graph failures return `503 profile_store_unavailable` or `502 profile_graph_invalid`. Recommendation graph failures use `503 recommendation_data_unavailable` or `502 recommendation_data_invalid`.
+
+## Recommendations API
+
+`GET /api/recommendations` requires an authenticated session and returns at most 20 current opportunities. It returns `READY` with ranked results, `INCOMPLETE_PROFILE` with `missingProfileFields: ["competencies"]` when no saved profile or competency rankings exist, or `NO_MATCHES` when a complete profile has no matching current opportunities. Fuseki failures return `503 recommendation_data_unavailable`; invalid graph data returns `502 recommendation_data_invalid`.
+
+Ranking is deterministic and uses lexicographic coverage criteria, not an unexplained weighted score: (1) the fraction of identified mandatory competency requirements matched, (2) the fraction of mandatory expected levels met where the requirement explicitly declares the same supported 1–5 competency scale as the candidate profile, then (3) the fraction of all identified competency requirements matched. Ties are ordered by offer IRI. Missing competencies are not treated as matches; missing or incompatible scales do not produce level comparisons. Reasons and the returned coverage counts come from these same inputs. Language, education, experience, skills, socioemotional factors, and professional contacts are not currently ranking signals because the offer graph does not provide corresponding comparable requirements. Recommendations are relevance guidance, not eligibility or hiring guarantees. The current local offers are expired, so the endpoint can correctly return `NO_MATCHES` until current offers are added.
 
 ## User profile API
 

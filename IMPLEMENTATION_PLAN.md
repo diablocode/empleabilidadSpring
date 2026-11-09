@@ -175,40 +175,43 @@ The existing repository is a minimal Spring Boot/Gradle starter using Java 21 an
 
 ### Layer 5 — Recommendation and ranking service
 
+**Status:** Complete.
+
 **Purpose:** Produce predictable, explainable recommendations from profile and opportunity data.
 
-**Work**
+**Delivered**
 
-- Implement the agreed initial priority: competency matches and mandatory requirement levels first, other supported signals secondary. Candidate competence rankings may be compared with `emp:nivelEsperado` only when both values use the same defined scale; MCER language levels remain a separate signal.
-- Allow supplied socioemotional and professional-network data to influence recommendations only through documented, explainable signals; do not infer protected traits.
-- Implement ranking as a separate backend service with deterministic behavior, tie handling, and explicit handling of missing profile/opportunity attributes.
-- Include match reasons derived from the same signals used to rank each opportunity. Where recommendations are persisted as RDF, use `emp:Recomendacion`/`emp:Explicacion`, supported SKOS recommendation types, `emp:utilizaEvidencia`, `emp:versionModelo`, and `emp:vigenteHasta` as applicable.
-- Apply the agreed current-opportunity rule and bounded result size.
-- Keep recommendations framed as relevance guidance, not an eligibility or hiring guarantee.
+- Added authenticated `GET /api/recommendations`, returning a bounded list of at most 20 current opportunities and distinct `READY`, `INCOMPLETE_PROFILE`, and `NO_MATCHES` states.
+- Ranked deterministically by mandatory competency coverage, mandatory expected-level coverage when both sides declare the supported 1–5 scale, then overall competency coverage; ties use offer IRI. No arbitrary weighted score is introduced.
+- Added reasons and coverage counts based on those same ranking inputs. Unsupported/missing scales are not compared, and non-competency profile fields remain unused until the offer graph provides comparable signals.
+- Reused the current-offer policy; stale, closed, unknown-status, and indeterminate offers are excluded. Results are framed as relevance guidance, not hiring guarantees.
+- Fuseki outages and invalid graph data return explicit `503` and `502` recommendation errors. Recommendations are computed on demand and are not persisted as RDF.
 
 **Verification**
 
-- Unit tests cover ranking order, ties, missing values, current listing filtering, and reason generation.
-- Fixture-based tests prove that the explanations correspond to the actual ranking inputs.
-- API tests cover incomplete profiles, no matches, and Fuseki failure separately.
+- Unit tests cover priority order, scale-gated level comparisons, ties, result bounds, stale-offer filtering, and explanation inputs.
+- API tests cover authentication, incomplete profiles, no matches, and Fuseki failures separately.
 
 **Dependencies:** Layers 2 and 4; ranking decisions and graph-supported fields from Layer 0.
 
 ### Layer 6 — Spring Boot API contract
 
+**Status:** Complete.
+
 **Purpose:** Provide a stable client-facing API over authentication, profiles, and recommendations.
 
-**Work**
+**Delivered**
 
-- Define and document endpoints for current user, profile read/update, opportunity detail/listing, and personalized recommendations.
-- Specify request/response types, validation errors, pagination/limits, authentication requirements, and error formats.
-- Keep Fuseki/RDF implementation details out of the public API responses.
-- Add API-level integration tests for happy paths and expected error states.
+- Documented the current-user, profile, opportunity listing/detail, recommendation, health, CSRF, sign-in, and sign-out routes, including session and CSRF requirements.
+- Added authenticated paginated opportunity listing and detail routes with bounded `offset`/`limit`, optional current-only filtering, and opaque stable offer IDs.
+- Defined typed opportunity and pagination responses that expose supported user-facing fields and freshness, without RDF IRIs, raw status literals, or invented application links.
+- Standardized opportunity API errors for invalid requests, missing IDs, unavailable/invalid graph data, and graph size limits.
+- Documented existing profile and recommendation response states and error behavior alongside the new opportunity contract.
 
 **Verification**
 
-- Endpoint contract tests verify response shape and authorization.
-- API documentation matches the implemented behavior.
+- API contract tests verify opportunity listing/detail response shapes, authentication, validation, not-found behavior, pagination, and freshness filtering.
+- Existing authentication, profile, and recommendation security/API tests continue to cover their routes and expected states.
 
 **Dependencies:** Layers 2–5.
 
